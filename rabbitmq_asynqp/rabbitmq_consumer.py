@@ -51,7 +51,7 @@ async def connect_and_consume(rabbitmq_config, callback_fn, queue):
     return connection
 
 
-async def reconnector(rabbitmq_config, callback_fn, queue):
+async def reconnector(rabbitmq_config, callback_fn, queue, queue_settings=None):
     """
     Reconnection to rabbit mq by internal polling. Don't use this directly.
     :param rabbitmq_config: Rabbit mq config dict for connection
@@ -61,7 +61,8 @@ async def reconnector(rabbitmq_config, callback_fn, queue):
     :return: None
     """
     connection = None
-    queue_settings = {'reconnect_backoff_secs': 1, 'connection_check_polling_secs': 5}
+    if queue_settings is None:
+        queue_settings = {'reconnect_backoff_secs': 1, 'connection_check_polling_secs': 5}
     connection_failures = 0
     try:
         while True:
@@ -85,7 +86,7 @@ async def reconnector(rabbitmq_config, callback_fn, queue):
             print("Connection closed for consumer in QUEUE: {queue}".format(queue=queue))
 
 
-def consume_message(rabbitmq_config, queue, callback_fn):
+def consume_message(rabbitmq_config, queue, callback_fn, queue_settings):
     """
     Consumer creation for QUEUE.
     :param app: flask app object
@@ -98,7 +99,7 @@ def consume_message(rabbitmq_config, queue, callback_fn):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     # Start main connecting and consuming task in the background
-    reconnect_task = loop.create_task(reconnector(rabbitmq_config, callback_fn, queue))
+    reconnect_task = loop.create_task(reconnector(rabbitmq_config, callback_fn, queue, queue_settings))
     try:
         loop.run_until_complete(reconnect_task)
     except asyncio.CancelledError:

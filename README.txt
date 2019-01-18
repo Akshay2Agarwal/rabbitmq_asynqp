@@ -28,6 +28,8 @@ asyncio with just few lines of code. Typical usage will be like this:
                 )
             )
 
+        queue_settings = {'reconnect_backoff_secs': 1, 'connection_check_polling_secs': 5} # Not compulsory
+
         def consumer_func(message: dict):
             # define your consumer func
             pass
@@ -48,12 +50,13 @@ To run only consumer use a separate thread or process and do following:
 
         rabbitmq_config = dict(host="localhost", port=5672, username="guest", password="guest")
         queue = "queue_name"
+        queue_settings = {'reconnect_backoff_secs': 1, 'connection_check_polling_secs': 5} # Not compulsory
 
-        def consumer_func(*args, **kwargs):
+        def consumer_func(message:dict):
             # define your consumer func
             pass
 
-        consumer = Consumer(rabbitmq_config, queue, consumer_func)
+        consumer = Consumer(rabbitmq_config, queue, consumer_func, queue_settings)
         consumer()
 
 
