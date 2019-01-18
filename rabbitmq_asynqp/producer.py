@@ -1,4 +1,4 @@
-from rabbitmq_producer import send_message, send_bulk_messages
+from rabbitmq_asynqp.rabbitmq_producer import send_message, send_bulk_messages
 
 
 class Producer:

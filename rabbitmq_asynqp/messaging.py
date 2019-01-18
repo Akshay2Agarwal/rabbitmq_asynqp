@@ -1,5 +1,5 @@
-from consumer import Consumer
-from producer import Producer
+from rabbitmq_asynqp.consumer import Consumer
+from rabbitmq_asynqp.producer import Producer
 from concurrent.futures import ThreadPoolExecutor
 
 
@@ -22,4 +22,12 @@ class Messaging:
             self.queue_consumer_locks = True
         producer = Producer(self.rabbitmq_config, self.queue_config)
         producer.send_msg(message)
-        return
+
+    def send_messages(self, messages: list):
+        if not self.queue_consumer_locks:
+            queue_consumer_pool = ThreadPoolExecutor(max_workers=len(self.queue_config["queues"]))
+            for queue in self.queue_config["queues"]:
+                queue_consumer_pool.submit(self.__run_consumer, **{'queue': queue})
+            self.queue_consumer_locks = True
+        producer = Producer(self.rabbitmq_config, self.queue_config)
+        producer.send_msgs(messages)

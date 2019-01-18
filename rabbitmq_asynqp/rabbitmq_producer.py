@@ -127,7 +127,7 @@ def send_bulk_messages(rabbitmq_config: dict, queue_config: dict, messages: list
     :param rabbitmq_config: dict config for rabbitmq instance config: {'host': , 'port': , 'username': , 'password': }
     :param messages: list of dict object(message) to be sent
     :param queue_config: dict config of consumer queues: {'exchange': '', 'queues': [], 'routing_key': '',
-    'exchange_type' (optional): '', 'error_messaging': dict}
+    'exchange_type':'', 'error_messaging': dict}
     :return:
     """
     loop = None

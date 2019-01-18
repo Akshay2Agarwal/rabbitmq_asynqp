@@ -1,4 +1,6 @@
-from messaging import Messaging
+#!/usr/bin/env python
+
+from rabbitmq_asynqp.messaging import Messaging
 
 if __name__ == "__main__":
     rabbitmq_config = dict(host="localhost", port=5672, username="guest", password="guest")

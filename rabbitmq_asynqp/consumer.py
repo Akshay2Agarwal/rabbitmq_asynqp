@@ -1,4 +1,4 @@
-from rabbitmq_consumer import consume_message
+from rabbitmq_asynqp.rabbitmq_consumer import consume_message
 
 
 class Consumer:
